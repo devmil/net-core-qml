@@ -62,6 +62,20 @@ namespace Qt.NetCore
                 typeInfo.AddMethod(methodInfo);
             }
 
+            foreach (var even in type.GetEvents(BindingFlags.Public | BindingFlags.Instance))
+            {
+				if (even.DeclaringType == typeof(Object)) continue;
+
+                var eventInfo = NetTypeInfoManager.NewEventInfo(typeInfo, even.Name, null);
+
+				foreach (var parameter in even.EventHandlerType.GetMethod("Invoke").GetParameters())
+				{
+					eventInfo.AddParameter(parameter.Name, NetTypeInfoManager.GetTypeInfo(parameter.ParameterType));
+				}
+
+				typeInfo.AddEvent(eventInfo);
+            }
+
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 typeInfo.AddProperty(NetTypeInfoManager.NewPropertyInfo(

@@ -10,6 +10,7 @@ class NetInstance;
 class NetVariant;
 class NetPropertyInfo;
 class NetMethodInfo;
+class NetEventInfo;
 
 class NetTypeInfoCallbacks {
 public:
@@ -57,6 +58,7 @@ public:
     static bool isValidType(char* typeName);
     static NetTypeInfo* GetTypeInfo(char* typeName);
     static NetMethodInfo* NewMethodInfo(NetTypeInfo* parentTypeInfo, char* methodName, NetTypeInfo* returnType);
+    static NetEventInfo* NewEventInfo(NetTypeInfo* parentTypeInfo, char* methodName, NetTypeInfo* returnType);
     static NetPropertyInfo* NewPropertyInfo(NetTypeInfo* parentTypeInfo, std::string propertyName, NetTypeInfo* returnType, bool canRead, bool canWrite);
     static NetInstance* CreateInstance(NetTypeInfo* typeInfo);
     static NetInstance* WrapCreatedInstance(NetGCHandle* gcHandle, NetTypeInfo* typeInfo);

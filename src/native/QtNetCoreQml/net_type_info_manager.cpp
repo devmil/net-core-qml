@@ -2,6 +2,7 @@
 #include "net_type_info.h"
 #include "net_type_info_method.h"
 #include "net_type_info_property.h"
+#include "net_type_info_event.h"
 #include "net_instance.h"
 #include "net_variant.h"
 
@@ -42,6 +43,10 @@ NetTypeInfo* NetTypeInfoManager::GetTypeInfo(char* typeName)
 NetMethodInfo* NetTypeInfoManager::NewMethodInfo(NetTypeInfo* parentTypeInfo, char* methodName, NetTypeInfo* returnType)
 {
     return new NetMethodInfo(parentTypeInfo, std::string(methodName), returnType);
+}
+
+NetEventInfo* NetTypeInfoManager::NewEventInfo(NetTypeInfo* parentTypeInfo, char* methodName, NetTypeInfo* returnType) {
+    return new NetEventInfo(parentTypeInfo, methodName, returnType);
 }
 
 NetPropertyInfo* NetTypeInfoManager::NewPropertyInfo(NetTypeInfo* parentTypeInfo, std::string propertyName, NetTypeInfo* returnType, bool canRead, bool canWrite)

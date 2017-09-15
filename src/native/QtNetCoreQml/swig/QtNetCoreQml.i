@@ -19,6 +19,7 @@
 %include "NetVariant.i"
 %include "NetTypeInfo.i"
 %include "NetTypeInfoMethod.i"
+%include "NetTypeInfoEvent.i"
 %include "NetTypeInfoProperty.i"
 %include "NetTypeInfoManager.i"
 %include "QCoreApplication.i"

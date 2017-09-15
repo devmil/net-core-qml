@@ -8,6 +8,7 @@
 class NetTypeInfo;
 class NetMethodInfo;
 class NetPropertyInfo;
+class NetEventInfo;
 
 class NetTypeInfo {
 public:
@@ -24,6 +25,9 @@ public:
     void AddProperty(NetPropertyInfo* propertyInfo);
     int GetPropertyCount();
     NetPropertyInfo* GetProperty(int index);
+    void AddEvent(NetEventInfo* eventInfo);
+    int GetEventCount();
+    NetEventInfo* GetEvent(int index);
     QMetaObject* metaObject;
 private:
     NetVariantTypeEnum prefVariantType;
@@ -31,6 +35,7 @@ private:
     std::string className;
     QList<NetMethodInfo*> methods;
     QList<NetPropertyInfo*> properties;
+    QList<NetEventInfo*> events;
 };
 
 

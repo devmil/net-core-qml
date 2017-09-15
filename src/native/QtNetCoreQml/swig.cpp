@@ -514,6 +514,9 @@ SWIGINTERN bool std_vector_Sl_std_string_Sg__Remove(std::vector< std::string > *
 #include "net_type_info_method.h"
 
 
+#include "net_type_info_event.h"
+
+
 #include "net_type_info_property.h"
 
 
@@ -1737,6 +1740,42 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_NetTypeInfo_GetProperty(void * jarg1, int j
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTypeInfo_AddEvent(void * jarg1, void * jarg2) {
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  NetEventInfo *arg2 = (NetEventInfo *) 0 ;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  arg2 = (NetEventInfo *)jarg2; 
+  (arg1)->AddEvent(arg2);
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_NetTypeInfo_GetEventCount(void * jarg1) {
+  int jresult ;
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  int result;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  result = (int)(arg1)->GetEventCount();
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetTypeInfo_GetEvent(void * jarg1, int jarg2) {
+  void * jresult ;
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  int arg2 ;
+  NetEventInfo *result = 0 ;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  arg2 = (int)jarg2; 
+  result = (NetEventInfo *)(arg1)->GetEvent(arg2);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_new_NetMethodInfo(void * jarg1, char * jarg2, void * jarg3) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
@@ -1827,6 +1866,34 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_NetMethodInfo(void * jarg1) {
   NetMethodInfo *arg1 = (NetMethodInfo *) 0 ;
   
   arg1 = (NetMethodInfo *)jarg1; 
+  delete arg1;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_NetEventInfo(void * jarg1, char * jarg2, void * jarg3) {
+  void * jresult ;
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  std::string arg2 ;
+  NetTypeInfo *arg3 = (NetTypeInfo *) 0 ;
+  NetEventInfo *result = 0 ;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg2)->assign(jarg2); 
+  arg3 = (NetTypeInfo *)jarg3; 
+  result = (NetEventInfo *)new NetEventInfo(arg1,arg2,arg3);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_NetEventInfo(void * jarg1) {
+  NetEventInfo *arg1 = (NetEventInfo *) 0 ;
+  
+  arg1 = (NetEventInfo *)jarg1; 
   delete arg1;
 }
 
@@ -2664,6 +2731,22 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_NetTypeInfoManager_NewMethodInfo(void * jar
 }
 
 
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetTypeInfoManager_NewEventInfo(void * jarg1, char * jarg2, void * jarg3) {
+  void * jresult ;
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  char *arg2 = (char *) 0 ;
+  NetTypeInfo *arg3 = (NetTypeInfo *) 0 ;
+  NetEventInfo *result = 0 ;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  arg2 = (char *)jarg2; 
+  arg3 = (NetTypeInfo *)jarg3; 
+  result = (NetEventInfo *)NetTypeInfoManager::NewEventInfo(arg1,arg2,arg3);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_NetTypeInfoManager_NewPropertyInfo(void * jarg1, char * jarg2, void * jarg3, unsigned int jarg4, unsigned int jarg5) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
@@ -3040,6 +3123,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_NetTestStringInterop(void * jarg1) {
   delete arg1;
 }
 
+
+SWIGEXPORT NetMethodInfo * SWIGSTDCALL CSharp_NetEventInfo_SWIGUpcast(NetEventInfo *jarg1) {
+    return (NetMethodInfo *)jarg1;
+}
 
 #ifdef __cplusplus
 }

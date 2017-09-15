@@ -74,3 +74,18 @@ NetPropertyInfo* NetTypeInfo::GetProperty(int index)
 
     return properties.at(index);
 }
+
+void NetTypeInfo::AddEvent(NetEventInfo* eventInfo) {
+    events.append(eventInfo);
+}
+
+int NetTypeInfo::GetEventCount() {
+    return events.size();
+}
+
+NetEventInfo* NetTypeInfo::GetEvent(int index) {
+    if(index < 0) return NULL;
+    if(index >= events.length()) return NULL;
+
+    return events.at(index);
+}

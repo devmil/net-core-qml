@@ -26,7 +26,8 @@ SOURCES += qguiapplication_helpers.cpp \
     qtestobject.cpp \
     net_variant.cpp \
     net_test_helper.cpp \
-    net_test_string_interop.cpp
+    net_test_string_interop.cpp \
+    net_type_info_event.cpp
 
 HEADERS += qtnetcoreqml_global.h \
     qguiapplication_helpers.h \
@@ -43,7 +44,8 @@ HEADERS += qtnetcoreqml_global.h \
     qtestobject.h \
     net_variant.h \
     net_test_helper.h \
-    net_test_string_interop.h
+    net_test_string_interop.h \
+    net_type_info_event.h
 
 unix {
     target.path = /usr/lib

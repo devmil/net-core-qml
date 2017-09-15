@@ -18,4 +18,7 @@ public:
     void AddProperty(NetPropertyInfo* propertyInfo);
     int GetPropertyCount();
     NetPropertyInfo* GetProperty(int index);
+    void AddEvent(NetEventInfo* eventInfo);
+    int GetEventCount();
+    NetEventInfo* GetEvent(int index);
 };

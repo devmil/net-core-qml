@@ -16,7 +16,7 @@ namespace Qt.NetCore.Sandbox
 
         static int Main()
         {
-            using (var runner = AssemblyRunner.WithAppDomain(typeof(Tests.BaseTests).Assembly.Location))
+            using (var runner = AssemblyRunner.WithoutAppDomain(typeof(Tests.BaseTests).Assembly.Location))
             {
                 runner.OnDiscoveryComplete = OnDiscoveryComplete;
                 runner.OnExecutionComplete = OnExecutionComplete;

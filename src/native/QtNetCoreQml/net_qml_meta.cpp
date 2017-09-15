@@ -1,6 +1,7 @@
 #include "net_qml_meta.h"
 #include "net_type_info.h"
 #include "net_type_info_method.h"
+#include "net_type_info_event.h"
 #include "net_type_info_property.h"
 #include "net_type_info_manager.h"
 #include "net_instance.h"
@@ -194,6 +195,30 @@ QMetaObject *metaObjectFor(NetTypeInfo *typeInfo)
     mob.setSuperClass(&QObject::staticMetaObject);
     mob.setClassName(typeInfo->GetClassName().c_str());
     mob.setFlags(QMetaObjectBuilder::DynamicMetaObject);
+
+    for(int index = 0; index <= typeInfo->GetEventCount() - 1; index++)
+    {
+        NetEventInfo* eventInfo = typeInfo->GetEvent(index);
+        QString signature = QString::fromStdString(eventInfo->GetMethodName());
+
+        signature.append("(");
+
+        for(int parameterIndex = 0; parameterIndex <= eventInfo->GetParameterCount() - 1; parameterIndex++)
+        {
+            if(parameterIndex > 0) {
+                signature.append(", ");
+            }
+
+            std::string parameterName;
+            NetTypeInfo* parameterType = NULL;
+            eventInfo->GetParameterInfo(0, &parameterName, &parameterType);
+            signature.append("QVariant");
+        }
+
+        signature.append(")");
+
+        mob.addSignal(signature.toLocal8Bit().constData());
+    }
 
     for(int index = 0; index <= typeInfo->GetMethodCount() - 1; index++)
     {
