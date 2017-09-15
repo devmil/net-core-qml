@@ -310,6 +310,26 @@ SWIGEXPORT void SWIGSTDCALL SWIGRegisterWStringCallback_QtNetCoreQml(SWIG_CSharp
   SWIG_csharp_wstring_callback = callback;
 }
 
+
+#ifdef _WIN32
+typedef wchar_t TCHAR;
+#else
+typedef char TCHAR;
+#endif
+
+
+/* Callback for returning strings to C# without leaking memory */
+typedef void * (SWIGSTDCALL* SWIG_CSharpQStringHelperCallback)(const TCHAR *);
+static SWIG_CSharpQStringHelperCallback SWIG_csharp_qstring_callback = NULL;
+
+
+#ifdef __cplusplus
+extern "C"
+#endif
+SWIGEXPORT void SWIGSTDCALL SWIGRegisterQStringCallback_QtNetCoreQml(SWIG_CSharpQStringHelperCallback callback) {
+    SWIG_csharp_qstring_callback = callback;
+}
+
 /* -----------------------------------------------------------------------------
  * director_common.swg
  *
@@ -1494,7 +1514,7 @@ SWIGEXPORT double SWIGSTDCALL CSharp_NetVariant_GetDouble(void * jarg1) {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetVariant_SetString(void * jarg1, char* jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetVariant_SetString(void * jarg1, void * jarg2) {
   NetVariant *arg1 = (NetVariant *) 0 ;
   QString *arg2 = (QString *) 0 ;
   QString temp2 ;
@@ -1502,7 +1522,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetVariant_SetString(void * jarg1, char* jarg
   arg1 = (NetVariant *)jarg1; 
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
@@ -1510,8 +1530,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetVariant_SetString(void * jarg1, char* jarg
 }
 
 
-SWIGEXPORT char* SWIGSTDCALL CSharp_NetVariant_GetString(void * jarg1) {
-  char* jresult ;
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetVariant_GetString(void * jarg1) {
+  void * jresult ;
   NetVariant *arg1 = (NetVariant *) 0 ;
   QString result;
   
@@ -1519,7 +1539,11 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetVariant_GetString(void * jarg1) {
   result = (arg1)->GetString();
   
   if(!(&result)->isNull()) {
-    jresult = (char*)SWIG_csharp_string_callback((&result)->toUtf8().data());
+#ifdef _WIN32
+    jresult = (TCHAR*)SWIG_csharp_qstring_callback((&result)->toStdWString().c_str());
+#else
+    jresult = (TCHAR*)SWIG_csharp_qtring_callback((&result)->toUtf8().data());
+#endif
   } else {
     jresult = NULL;
   }
@@ -2897,7 +2921,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_QQmlApplicationEngine(void * jarg1) {
 }
 
 
-SWIGEXPORT int SWIGSTDCALL CSharp_registerNetType(char* jarg1, char* jarg2, int jarg3, int jarg4, char* jarg5) {
+SWIGEXPORT int SWIGSTDCALL CSharp_registerNetType(void * jarg1, void * jarg2, int jarg3, int jarg4, void * jarg5) {
   int jresult ;
   QString *arg1 = 0 ;
   QString *arg2 = 0 ;
@@ -2911,13 +2935,13 @@ SWIGEXPORT int SWIGSTDCALL CSharp_registerNetType(char* jarg1, char* jarg2, int 
   
   
   if(jarg1) {
-    temp1 = jarg1;
+    temp1 = QString::fromWCharArray((wchar_t*)jarg1);
   }
   arg1 = &temp1;
   
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
@@ -2925,7 +2949,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_registerNetType(char* jarg1, char* jarg2, int 
   arg4 = (int)jarg4; 
   
   if(jarg5) {
-    temp5 = jarg5;
+    temp5 = QString::fromWCharArray((wchar_t*)jarg5);
   }
   arg5 = &temp5;
   
@@ -2935,7 +2959,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_registerNetType(char* jarg1, char* jarg2, int 
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQml(void * jarg1, char* jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQml(void * jarg1, void * jarg2) {
   QQmlApplicationEngine *arg1 = (QQmlApplicationEngine *) 0 ;
   QString *arg2 = 0 ;
   QString temp2 ;
@@ -2943,7 +2967,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQml(void * jarg1, char* jarg
   arg1 = (QQmlApplicationEngine *)jarg1; 
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
@@ -2951,7 +2975,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQml(void * jarg1, char* jarg
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQmlMethod(void * jarg1, char* jarg2, char* jarg3, void * jarg4, void * jarg5) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQmlMethod(void * jarg1, void * jarg2, void * jarg3, void * jarg4, void * jarg5) {
   QQmlApplicationEngine *arg1 = (QQmlApplicationEngine *) 0 ;
   QString *arg2 = 0 ;
   QString *arg3 = 0 ;
@@ -2963,13 +2987,13 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestHelper_RunQmlMethod(void * jarg1, char
   arg1 = (QQmlApplicationEngine *)jarg1; 
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
   
   if(jarg3) {
-    temp3 = jarg3;
+    temp3 = QString::fromWCharArray((wchar_t*)jarg3);
   }
   arg3 = &temp3;
   
@@ -3007,7 +3031,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_new_NetTestStringInterop() {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringValue(void * jarg1, char* jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringValue(void * jarg1, void * jarg2) {
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString arg2 ;
   QString temp2 ;
@@ -3015,15 +3039,15 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringValue(void * ja
   arg1 = (NetTestStringInterop *)jarg1; 
   
   if(jarg2) {
-    arg2 = jarg2;
+    arg2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   
   (arg1)->SetStringValue(arg2);
 }
 
 
-SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringValue(void * jarg1) {
-  char* jresult ;
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetTestStringInterop_GetStringValue(void * jarg1) {
+  void * jresult ;
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString result;
   
@@ -3031,7 +3055,11 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringValue(void * j
   result = (arg1)->GetStringValue();
   
   if(!(&result)->isNull()) {
-    jresult = (char*)SWIG_csharp_string_callback((&result)->toUtf8().data());
+#ifdef _WIN32
+    jresult = (TCHAR*)SWIG_csharp_qstring_callback((&result)->toStdWString().c_str());
+#else
+    jresult = (TCHAR*)SWIG_csharp_qtring_callback((&result)->toUtf8().data());
+#endif
   } else {
     jresult = NULL;
   }
@@ -3040,7 +3068,7 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringValue(void * j
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringReference(void * jarg1, char* jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringReference(void * jarg1, void * jarg2) {
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString *arg2 = 0 ;
   QString temp2 ;
@@ -3048,7 +3076,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringReference(void 
   arg1 = (NetTestStringInterop *)jarg1; 
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
@@ -3056,8 +3084,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringReference(void 
 }
 
 
-SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringReference(void * jarg1) {
-  char* jresult ;
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetTestStringInterop_GetStringReference(void * jarg1) {
+  void * jresult ;
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString *result = 0 ;
   
@@ -3065,7 +3093,11 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringReference(void
   result = (QString *) &(arg1)->GetStringReference();
   
   if(!result->isNull()) {
-    jresult = (char*)SWIG_csharp_string_callback(result->toUtf8().data());
+#ifdef _WIN32
+    jresult = (TCHAR*)SWIG_csharp_qstring_callback(result->toStdWString().c_str());
+#else
+    jresult = (TCHAR*)SWIG_csharp_qtring_callback(result->toUtf8().data());
+#endif
   } else {
     jresult = NULL;
   }
@@ -3074,7 +3106,7 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringReference(void
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringPointer(void * jarg1, char* jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringPointer(void * jarg1, void * jarg2) {
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString *arg2 = (QString *) 0 ;
   QString temp2 ;
@@ -3082,7 +3114,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringPointer(void * 
   arg1 = (NetTestStringInterop *)jarg1; 
   
   if(jarg2) {
-    temp2 = jarg2;
+    temp2 = QString::fromWCharArray((wchar_t*)jarg2);
   }
   arg2 = &temp2;
   
@@ -3090,8 +3122,8 @@ SWIGEXPORT void SWIGSTDCALL CSharp_NetTestStringInterop_SetStringPointer(void * 
 }
 
 
-SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringPointer(void * jarg1) {
-  char* jresult ;
+SWIGEXPORT void * SWIGSTDCALL CSharp_NetTestStringInterop_GetStringPointer(void * jarg1) {
+  void * jresult ;
   NetTestStringInterop *arg1 = (NetTestStringInterop *) 0 ;
   QString *result = 0 ;
   
@@ -3099,7 +3131,11 @@ SWIGEXPORT char* SWIGSTDCALL CSharp_NetTestStringInterop_GetStringPointer(void *
   result = (QString *)(arg1)->GetStringPointer();
   
   if(!result->isNull()) {
-    jresult = (char*)SWIG_csharp_string_callback(result->toUtf8().data());
+#ifdef _WIN32
+    jresult = (TCHAR*)SWIG_csharp_qstring_callback(result->toStdWString().c_str());
+#else
+    jresult = (TCHAR*)SWIG_csharp_qstring_callback(result->toUtf8().data());
+#endif
   } else {
     jresult = NULL;
   }
