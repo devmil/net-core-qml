@@ -1,4 +1,5 @@
 ﻿using System;
+using Moq;
 using Xunit;
 
 namespace Qt.NetCore.Tests
@@ -9,38 +10,42 @@ namespace Qt.NetCore.Tests
 		{
 			public virtual uint Property { get; set; }
 
-            public event EventHandler GenericEvent;
+            public event Action GenericEvent;
 
             public void RaiseGenericEvent()
             {
                 var handler = GenericEvent;
-                if (handler != null)
-                    handler(this, EventArgs.Empty);
+                handler?.Invoke();
             }
+
+		    public virtual void TestMethod()
+		    {
+		        
+		    }
 		}
 
         [Fact]
-        public void Can_raise_event()
+        public void Can_trigger_signal_from_qml()
         {
 			NetTestHelper.RunQml(qmlApplicationEngine,
-				@"
+                @"
                 import QtQuick 2.0
                 import tests 1.0
 
                 EventHandlerTestsQml {
                     id: test
                     Component.onCompleted: function() {
-                        console.log(""TEST"")
                         test.GenericEvent.connect(testHandler)
-                        console.log(""CONNECTED"")
-                        //test.RaiseGenericEvent()
+                        test.GenericEvent()
                     }
 
-                    function testHandler(person, notice) {
-                        
+                    function testHandler() {
+                        test.TestMethod()
                     }
                 }
             ");
+
+            Mock.Verify(x => x.TestMethod(), Times.Once);
         }
     }
 }

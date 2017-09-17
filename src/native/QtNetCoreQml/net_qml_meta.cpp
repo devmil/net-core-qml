@@ -317,32 +317,46 @@ int GoValueMetaObject::metaCall(QMetaObject::Call c, int idx, void **a)
             return value->qt_metacall(c, idx, a);
         }
 
-        NetMethodInfo* methodInfo = instance->GetTypeInfo()->GetMethod(idx - offset);
+        idx -= offset;
 
-        std::vector<NetVariant*> parameters;
+        NetMethodInfo* methodInfo = NULL;
+        bool isSignal = false;
 
-        for(int index = 0; index <= methodInfo->GetParameterCount() - 1; index++)
-        {
-            NetTypeInfo* typeInfo = NULL;
-            methodInfo->GetParameterInfo(index, NULL, &typeInfo);
-
-            NetVariant* netVariant = new NetVariant();
-            metaUnpackValue(netVariant, reinterpret_cast<QVariant*>(a[index + 1]), typeInfo->GetPrefVariantType());
-            parameters.insert(parameters.end(), netVariant);
+        if(idx < instance->GetTypeInfo()->GetEventCount()) {
+            methodInfo = instance->GetTypeInfo()->GetEvent(idx);
+            isSignal = true;
+        } else {
+            methodInfo = instance->GetTypeInfo()->GetMethod(idx - instance->GetTypeInfo()->GetEventCount());
         }
 
-        NetVariant* result = NetTypeInfoManager::InvokeMethod(methodInfo, instance, parameters);
+        if (isSignal) {
+            QMetaObject::activate(value, this, idx, a);
+        } else {
+            std::vector<NetVariant*> parameters;
 
-        for(int x = 0; x < parameters.size(); x++) {
-            NetVariant* variant = parameters.at(x);
-            delete variant;
+            for(int index = 0; index <= methodInfo->GetParameterCount() - 1; index++)
+            {
+                NetTypeInfo* typeInfo = NULL;
+                methodInfo->GetParameterInfo(index, NULL, &typeInfo);
+
+                NetVariant* netVariant = new NetVariant();
+                metaUnpackValue(netVariant, reinterpret_cast<QVariant*>(a[index + 1]), typeInfo->GetPrefVariantType());
+                parameters.insert(parameters.end(), netVariant);
+            }
+
+            NetVariant* result = NetTypeInfoManager::InvokeMethod(methodInfo, instance, parameters);
+
+            for(int x = 0; x < parameters.size(); x++) {
+                NetVariant* variant = parameters.at(x);
+                delete variant;
+            }
+
+            if(result) {
+                metaPackValue(result, reinterpret_cast<QVariant*>(a[0]));
+            }
+
+            delete result;
         }
-
-        if(result) {
-            metaPackValue(result, reinterpret_cast<QVariant*>(a[0]));
-        }
-
-        delete result;
     }
         break;
     default:

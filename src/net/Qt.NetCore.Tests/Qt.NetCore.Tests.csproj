@@ -64,6 +64,7 @@
     <Compile Include="DateTimeTests.cs" />
     <Compile Include="DoubleTests.cs" />
     <Compile Include="CharTests.cs" />
+    <Compile Include="EventHandlerTests.cs" />
     <Compile Include="IntTests.cs" />
     <Compile Include="ObjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
