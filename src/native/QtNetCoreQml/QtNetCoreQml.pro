@@ -11,6 +11,7 @@ TEMPLATE = lib
 
 DEFINES += QTNETCOREQML_LIBRARY
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += Q_OS_LINUX
 
 SOURCES += qguiapplication_helpers.cpp \
     swig.cpp \
