@@ -23,10 +23,12 @@ ApplicationWindow {
 	Page1 {
 		anchors.horizontalCenter: parent.horizontalCenter
 		button1.onClicked: {
-			//console.log("Button Pressed. Entered text: " + textField1.text);
 			test.OnPressed(textField1.text);
 		}
-
+		textFieldMessage.text: test.MessageToSend
+		buttonSendMessage.onClicked: {
+			test.SendMessage();
+		}
 	}
 
 	Text {

@@ -18,4 +18,5 @@ public:
     void AddProperty(NetPropertyInfo* propertyInfo);
     int GetPropertyCount();
     NetPropertyInfo* GetProperty(int index);
+    void NotifyPropertyChanged(void* instance, std::string propertyName);
 };

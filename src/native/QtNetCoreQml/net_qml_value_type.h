@@ -14,7 +14,7 @@ class NetValueType : public NetValue
 public:
 
     NetValueType()
-        : NetValue(NetTypeInfoManager::CreateInstance(typeInfo), 0) {};
+        : NetValue(NetTypeInfoManager::CreateInstance(typeInfo), nullptr) {};
 
     static void init(NetTypeInfo *info)
     {

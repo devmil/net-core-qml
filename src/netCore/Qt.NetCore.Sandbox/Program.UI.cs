@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Qt.NetCore.Sandbox
 {
@@ -27,44 +29,77 @@ namespace Qt.NetCore.Sandbox
             }
         }
 
-        public class TestQmlImport
+        public class TestQmlImport : INotifyPropertyChanged
         {
-            private static int _COUNTER = 0;
+            private static int _ANOTHER_TYPE_COUNTER = 0;
+
+            private String _MessageToSend = "TestMessage äöü";
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public String MessageToSend
+            {
+                get
+                {
+                    return _MessageToSend;
+                }
+                set
+                {
+                    if(!object.Equals(_MessageToSend, value))
+                    {
+                        _MessageToSend = value;
+                        RaiseNotifyPropertyChanged();
+                    }
+                }
+            }
             public TestQmlImport()
             {
-                _COUNTER++;
-                Console.WriteLine("TestQmlImport: Ctor() #" + _COUNTER.ToString());
+                Console.WriteLine("TestQmlImport: Ctor()");
             }
 
             ~TestQmlImport()
             {
-                Console.WriteLine("TestQmlImport: ~Dtor() #" + _COUNTER.ToString());
+                Console.WriteLine("TestQmlImport: ~Dtor()");
             }
 
             public AnotherType Create()
             {
-                Console.WriteLine("AnotherType: Create() #" + _COUNTER.ToString());
+                _ANOTHER_TYPE_COUNTER++;
+                Console.WriteLine("AnotherType: Create() #" + _ANOTHER_TYPE_COUNTER.ToString());
+                MessageToSend = string.Format("Hey there! We already created {0} instances!", _ANOTHER_TYPE_COUNTER);
                 return new AnotherType();
             }
             
             public void TestMethod(AnotherType anotherType)
             {
-                Console.WriteLine("AnotherType: TestMethod() #" + _COUNTER.ToString());
+                Console.WriteLine("AnotherType: TestMethod()");
             }
 
             public void OnPressed(string editContent)
             {
                 Console.Out.WriteLine("Message from QML: OnPressed, editContent = {0}", editContent);
             }
+
+            public void SendMessage()
+            {
+                Console.Out.WriteLine("Received a Message from QML: {0}", MessageToSend);
+            }
+
+            private void RaiseNotifyPropertyChanged([CallerMemberName]string propertyName = "")
+            {
+                if(PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                }
+            }
         }
 
         static int Main()
         {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 Helpers.LoadDebugVariables();
             }
-
             Task.Factory.StartNew(() =>
             {
                 while (true)

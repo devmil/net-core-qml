@@ -74,3 +74,8 @@ NetPropertyInfo* NetTypeInfo::GetProperty(int index)
 
     return properties.at(index);
 }
+
+void NetTypeInfo::NotifyPropertyChanged(void* instance, std::string propertyName)
+{
+    qDebug() << "Got a property changed notification for a " << fullTypeName.c_str() << ". Property = " << propertyName.c_str() << ". Instance = " << reinterpret_cast<uint64_t>(instance);
+}

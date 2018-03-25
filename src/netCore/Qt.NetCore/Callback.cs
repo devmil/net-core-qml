@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace Qt.NetCore
 {
@@ -44,6 +45,9 @@ namespace Qt.NetCore
             {
                 if (method.DeclaringType == typeof(Object)) continue;
 
+                //ignore system stuff like event methods
+                if (method.IsSpecialName) continue;
+
                 NetTypeInfo returnType = null;
 
                 if (method.ReturnParameter.ParameterType != typeof(void))
@@ -63,6 +67,9 @@ namespace Qt.NetCore
 
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
+                //ignore system stuff like events
+                if (property.IsSpecialName) continue;
+
                 typeInfo.AddProperty(NetTypeInfoManager.NewPropertyInfo(
                     typeInfo, property.Name,
                     NetTypeInfoManager.GetTypeInfo(property.PropertyType),
@@ -77,8 +84,19 @@ namespace Qt.NetCore
 
             var typeCreator = NetTypeInfoManager.TypeCreator;
             
-            var handle = GCHandle.Alloc(typeCreator != null ? typeCreator.Create(type) : Activator.CreateInstance(type));
+            object netInstance = typeCreator != null ? typeCreator.Create(type) : Activator.CreateInstance(type);
+            var handle = GCHandle.Alloc(netInstance);
             instance = GCHandle.ToIntPtr(handle);
+
+            if(netInstance is INotifyPropertyChanged) 
+            {
+                var localInstance = instance;
+                (netInstance as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(
+                    (sender, e) =>
+                    {
+                        typeInfo.NotifyPropertyChanged(localInstance, e.PropertyName);
+                    });
+            }
         }
 
         public override void ReadProperty(NetPropertyInfo propertyInfo, NetInstance target, NetVariant result)

@@ -1776,6 +1776,22 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_GetProperty___(void 
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_NotifyPropertyChanged___(void * jarg1, void * jarg2, char * jarg3) {
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  void *arg2 = (void *) 0 ;
+  std::string arg3 ;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  arg2 = jarg2; 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  (&arg3)->assign(jarg3); 
+  (arg1)->NotifyPropertyChanged(arg2,arg3);
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_new_NetMethodInfo___(void * jarg1, char * jarg2, void * jarg3) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
