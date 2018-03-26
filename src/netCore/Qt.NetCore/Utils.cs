@@ -124,7 +124,7 @@ namespace Qt.NetCore
                 _RegisteredNotifyPropertyChangeObjects.RemoveAll(
                     entry =>
                     {
-                        return entry.TryGetTarget(out INotifyPropertyChanged dummyTarget);
+                        return !entry.TryGetTarget(out INotifyPropertyChanged dummyTarget);
                     });
                 var alreadyRegistered = _RegisteredNotifyPropertyChangeObjects.Any(
                     entry =>
