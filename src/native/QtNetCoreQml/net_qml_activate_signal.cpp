@@ -8,3 +8,9 @@ void activateSignal(NetGCHandle* instance, std::string netType, std::string sign
     NetTypeInfo* typeInfo = NetTypeInfoManager::GetTypeInfo(const_cast<char*>(netType.c_str()));
     typeInfo->ActivateSignal(instance, signalName, args);
 }
+
+bool tryActivateSignal(NetGCHandle* instance, std::string netType, std::string signalName, std::vector<NetVariant*> args) {
+    NetVariant* result = nullptr;
+    NetTypeInfo* typeInfo = NetTypeInfoManager::GetTypeInfo(const_cast<char*>(netType.c_str()));
+    return typeInfo->TryActivateSignal(instance, signalName, args);
+}

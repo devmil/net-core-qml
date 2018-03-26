@@ -144,7 +144,7 @@ namespace Qt.NetCore
                 castedNetInstance.PropertyChanged += new PropertyChangedEventHandler(
                     (sender, e) =>
                     {
-                        QQmlApplicationEngine.ActivateSignal(handle, Utils.CalculatePropertyChangedSignalName(e.PropertyName));
+                        QQmlApplicationEngine.TryActivateSignal(handle, Utils.CalculatePropertyChangedSignalName(e.PropertyName));
                     });
             }
         }

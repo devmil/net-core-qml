@@ -111,6 +111,19 @@ NetPropertyInfo* NetTypeInfo::GetProperty(int index)
     return properties.at(index);
 }
 
+bool NetTypeInfo::TryActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args)
+{
+    try
+    {
+        ActivateSignal(instance, signalName, args);
+        return true;
+    }
+    catch(std::exception&)
+    {
+        return false;
+    }
+}
+
 void NetTypeInfo::ActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args)
 {
     if(netHandleValuesMap.contains(instance))

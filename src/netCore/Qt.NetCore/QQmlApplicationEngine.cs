@@ -30,6 +30,12 @@ namespace Qt.NetCore
             QtNetCoreQml.activateSignal(GCHandle.ToIntPtr(handle), netTypeInfo.GetFullTypeName(), signalName, PackVariantArgs(args));
         }
 
+        public static bool TryActivateSignal(GCHandle handle, string signalName, params object[] args)
+        {
+            var netTypeInfo = NetTypeInfoManager.GetTypeInfo(handle.Target.GetType());
+            return QtNetCoreQml.tryActivateSignal(GCHandle.ToIntPtr(handle), netTypeInfo.GetFullTypeName(), signalName, PackVariantArgs(args));
+        }
+
         private static NetVariantVector PackVariantArgs(object[] args)
         {
             NetVariantVector result = new NetVariantVector();

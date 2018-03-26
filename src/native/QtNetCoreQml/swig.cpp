@@ -1803,6 +1803,34 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_ActivateSignal___(void
 }
 
 
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_TryActivateSignal___(void * jarg1, void * jarg2, char * jarg3, void * jarg4) {
+  unsigned int jresult ;
+  NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
+  NetGCHandle *arg2 = (NetGCHandle *) 0 ;
+  std::string arg3 ;
+  std::vector< NetVariant * > arg4 ;
+  std::vector< NetVariant * > *argp4 ;
+  bool result;
+  
+  arg1 = (NetTypeInfo *)jarg1; 
+  arg2 = jarg2; 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg3)->assign(jarg3); 
+  argp4 = (std::vector< NetVariant * > *)jarg4; 
+  if (!argp4) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< NetVariant * >", 0);
+    return 0;
+  }
+  arg4 = *argp4; 
+  result = (bool)(arg1)->TryActivateSignal(arg2,arg3,arg4);
+  jresult = result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_new_NetMethodInfo___(void * jarg1, char * jarg2, void * jarg3) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
@@ -2961,6 +2989,38 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_activateSignal___(void * jarg1, ch
   }
   arg4 = *argp4; 
   activateSignal(arg1,arg2,arg3,arg4);
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_QtfNetCore_tryActivateSignal___(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
+  unsigned int jresult ;
+  NetGCHandle *arg1 = (NetGCHandle *) 0 ;
+  std::string arg2 ;
+  std::string arg3 ;
+  std::vector< NetVariant * > arg4 ;
+  std::vector< NetVariant * > *argp4 ;
+  bool result;
+  
+  arg1 = jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg2)->assign(jarg2); 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg3)->assign(jarg3); 
+  argp4 = (std::vector< NetVariant * > *)jarg4; 
+  if (!argp4) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< NetVariant * >", 0);
+    return 0;
+  }
+  arg4 = *argp4; 
+  result = (bool)tryActivateSignal(arg1,arg2,arg3,arg4);
+  jresult = result; 
+  return jresult;
 }
 
 

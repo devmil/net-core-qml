@@ -30,6 +30,7 @@ public:
     void UnregisterNetInstance(NetValue* qmlObject);
     NetPropertyInfo* GetProperty(int index);
     void ActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args);
+    bool TryActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args);
     QMetaObject* metaObject;
 private:
     NetVariantTypeEnum prefVariantType;

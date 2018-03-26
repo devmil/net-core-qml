@@ -622,6 +622,12 @@ public class NetTypeInfo : global::System.IDisposable {
     if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
   }
 
+  public bool TryActivateSignal(System.IntPtr instance, string signalName, NetVariantVector args) {
+    bool ret = QtNetCoreQmlPINVOKE.NetTypeInfo_TryActivateSignal(swigCPtr, instance, signalName, NetVariantVector.getCPtr(args));
+    if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
 }
 
 }
@@ -2031,6 +2037,9 @@ class QtNetCoreQmlPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetTypeInfo_ActivateSignal___")]
   public static extern void NetTypeInfo_ActivateSignal(global::System.Runtime.InteropServices.HandleRef jarg1, System.IntPtr jarg2, string jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
 
+  [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetTypeInfo_TryActivateSignal___")]
+  public static extern bool NetTypeInfo_TryActivateSignal(global::System.Runtime.InteropServices.HandleRef jarg1, System.IntPtr jarg2, string jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
+
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_new_NetMethodInfo___")]
   public static extern global::System.IntPtr new_NetMethodInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
@@ -2268,6 +2277,9 @@ class QtNetCoreQmlPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_activateSignal___")]
   public static extern void activateSignal(System.IntPtr jarg1, string jarg2, string jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
 
+  [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_tryActivateSignal___")]
+  public static extern bool tryActivateSignal(System.IntPtr jarg1, string jarg2, string jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
+
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetTestHelper_RunQml___")]
   public static extern void NetTestHelper_RunQml(global::System.Runtime.InteropServices.HandleRef jarg1, [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPTStr)]string jarg2);
 
@@ -2320,6 +2332,12 @@ public class QtNetCoreQml {
   public static void activateSignal(System.IntPtr instance, string netType, string signalName, NetVariantVector args) {
     QtNetCoreQmlPINVOKE.activateSignal(instance, netType, signalName, NetVariantVector.getCPtr(args));
     if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public static bool tryActivateSignal(System.IntPtr instance, string netType, string signalName, NetVariantVector args) {
+    bool ret = QtNetCoreQmlPINVOKE.tryActivateSignal(instance, netType, signalName, NetVariantVector.getCPtr(args));
+    if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
+    return ret;
   }
 
 }
