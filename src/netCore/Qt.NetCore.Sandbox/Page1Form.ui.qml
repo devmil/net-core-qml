@@ -28,7 +28,7 @@ Item {
         id: secondRow
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 20
-        anchors.top: parent.top
+        anchors.top: firstRow.bottom
 
         TextField {
             id: textFieldMessage

@@ -232,6 +232,10 @@ QMetaObject *metaObjectFor(NetTypeInfo *typeInfo)
                                                      index);
         propb.setWritable(propertyInfo->CanWrite());
         propb.setReadable(propertyInfo->CanRead());
+
+        auto notifySignalName = propertyInfo->GetPropertyName() + "Changed()";
+        auto signal = mob.addSignal(notifySignalName.c_str());
+        propb.setNotifySignal(signal);
     }
 
     QMetaObject *mo = mob.toMetaObject();

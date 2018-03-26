@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
@@ -88,15 +89,7 @@ namespace Qt.NetCore
             var handle = GCHandle.Alloc(netInstance);
             instance = GCHandle.ToIntPtr(handle);
 
-            if(netInstance is INotifyPropertyChanged) 
-            {
-                var localInstance = instance;
-                (netInstance as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(
-                    (sender, e) =>
-                    {
-                        typeInfo.NotifyPropertyChanged(localInstance, e.PropertyName);
-                    });
-            }
+            Utils.TryAttachNotifyPropertyChanged(netInstance, handle);
         }
 
         public override void ReadProperty(NetPropertyInfo propertyInfo, NetInstance target, NetVariant result)
@@ -108,7 +101,7 @@ namespace Qt.NetCore
                 .GetProperty(propertyInfo.GetPropertyName(), BindingFlags.Instance | BindingFlags.Public)
                 .GetValue(o);
 
-            PackValue(ref value, result);
+            Utils.PackValue(value, result, true);
         }
 
         public override void WriteProperty(NetPropertyInfo propertyInfo, NetInstance target, NetVariant value)
@@ -122,7 +115,7 @@ namespace Qt.NetCore
                 .GetProperty(propertyInfo.GetPropertyName(), BindingFlags.Instance | BindingFlags.Public);
 
             object newValue = null;
-            Unpackvalue(ref newValue, value);
+            Utils.Unpackvalue(ref newValue, value);
 
             pInfo.SetValue(o, newValue);
         }
@@ -142,7 +135,7 @@ namespace Qt.NetCore
                 foreach (var parameterInstance in parameters)
                 {
                     object v = null;
-                    Unpackvalue(ref v, parameterInstance);
+                    Utils.Unpackvalue(ref v, parameterInstance);
                     methodParameters.Add(v);
                 }
             }
@@ -158,7 +151,7 @@ namespace Qt.NetCore
             }
             else
             {
-                PackValue(ref r, result);
+                Utils.PackValue(r, result, true);
             }
         }
 
@@ -173,84 +166,6 @@ namespace Qt.NetCore
             var handle = (GCHandle)gcHandle;
             var duplicatedHandle = GCHandle.Alloc(handle.Target);
             gcHandleCopy = GCHandle.ToIntPtr(duplicatedHandle);
-        }
-
-        private void PackValue(ref object source, NetVariant destination)
-        {
-            if (source == null)
-            {
-                destination.Clear();
-            }
-            else
-            {
-                var type = source.GetType();
-                if (type == typeof(bool))
-                    destination.SetBool((bool)source);
-                else if(type == typeof(char))
-                    destination.SetChar((char)source);
-                else if(type == typeof(double))
-                    destination.SetDouble((double)source);
-                else if (type == typeof(int))
-                    destination.SetInt((int)source);
-                else if(type == typeof(uint))
-                    destination.SetUInt((uint)source);
-                else if (type == typeof(string))
-                    destination.SetString((string)source);
-                else if(type == typeof(DateTime))
-                    destination.SetDateTime((DateTime)source);
-                else
-                {
-                    destination.SetNetInstance(NetTypeInfoManager.WrapCreatedInstance(
-                        GCHandle.ToIntPtr(GCHandle.Alloc(source)),
-                        NetTypeInfoManager.GetTypeInfo(GetUnproxiedType(type))));
-                }
-            }
-        }
-
-        private void Unpackvalue(ref object destination, NetVariant source)
-        {
-            switch (source.GetVariantType())
-            {
-                case NetVariantTypeEnum.NetVariantTypeEnum_Invalid:
-                    destination = null;
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_Bool:
-                    destination = source.GetBool();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_Char:
-                    destination = source.GetChar();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_Int:
-                    destination = source.GetInt();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_UInt:
-                    destination = source.GetUInt();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_Double:
-                    destination = source.GetDouble();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_String:
-                    destination = source.GetString();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_DateTime:
-                    destination = source.GetDateTime();
-                    break;
-                case NetVariantTypeEnum.NetVariantTypeEnum_Object:
-                    var netInstance = source.GetNetInstance();
-                    var gcHandle = (GCHandle)netInstance.GetGCHandle();
-                    destination = gcHandle.Target;
-                    break;
-                default:
-                    throw new Exception("Unsupported variant type.");
-            }
-        }
-
-        private Type GetUnproxiedType(Type type)
-        {
-            if (type.Namespace == "Castle.Proxies")
-                return type.BaseType;
-
-            return type;
         }
     }
 }

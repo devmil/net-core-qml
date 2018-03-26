@@ -676,6 +676,9 @@ SWIGINTERN bool std_vector_Sl_NetVariant_Sm__Sg__Remove(std::vector< NetVariant 
 #include "net_qml_register_type.h"
 
 
+#include "net_qml_activate_signal.h"
+
+
 #include "net_test_helper.h"
 
 
@@ -1776,10 +1779,12 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_GetProperty___(void 
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_NotifyPropertyChanged___(void * jarg1, void * jarg2, char * jarg3) {
+SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_ActivateSignal___(void * jarg1, void * jarg2, char * jarg3, void * jarg4) {
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
-  void *arg2 = (void *) 0 ;
+  NetGCHandle *arg2 = (NetGCHandle *) 0 ;
   std::string arg3 ;
+  std::vector< NetVariant * > arg4 ;
+  std::vector< NetVariant * > *argp4 ;
   
   arg1 = (NetTypeInfo *)jarg1; 
   arg2 = jarg2; 
@@ -1788,7 +1793,13 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfo_NotifyPropertyChanged_
     return ;
   }
   (&arg3)->assign(jarg3); 
-  (arg1)->NotifyPropertyChanged(arg2,arg3);
+  argp4 = (std::vector< NetVariant * > *)jarg4; 
+  if (!argp4) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< NetVariant * >", 0);
+    return ;
+  }
+  arg4 = *argp4; 
+  (arg1)->ActivateSignal(arg2,arg3,arg4);
 }
 
 
@@ -2885,13 +2896,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_QtfNetCore_registerNetType___(void * jarg1, vo
   if(jarg1) {
 #if defined(_WCHAR_MODE)
     temp1 = QString::fromWCharArray((TCHAR*)jarg1);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp1 = QString::fromUtf16((TCHAR*)jarg1);
-    qDebug() << "Linux mode";
 #else
     temp1 = QString::fromUtf8((TCHAR*)jarg1);
-    qDebug() << "Other mode";
 #endif
   }
   arg1 = &temp1;
@@ -2900,13 +2908,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_QtfNetCore_registerNetType___(void * jarg1, vo
   if(jarg2) {
 #if defined(_WCHAR_MODE)
     temp2 = QString::fromWCharArray((TCHAR*)jarg2);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp2 = QString::fromUtf16((TCHAR*)jarg2);
-    qDebug() << "Linux mode";
 #else
     temp2 = QString::fromUtf8((TCHAR*)jarg2);
-    qDebug() << "Other mode";
 #endif
   }
   arg2 = &temp2;
@@ -2917,13 +2922,10 @@ SWIGEXPORT int SWIGSTDCALL CSharp_QtfNetCore_registerNetType___(void * jarg1, vo
   if(jarg5) {
 #if defined(_WCHAR_MODE)
     temp5 = QString::fromWCharArray((TCHAR*)jarg5);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp5 = QString::fromUtf16((TCHAR*)jarg5);
-    qDebug() << "Linux mode";
 #else
     temp5 = QString::fromUtf8((TCHAR*)jarg5);
-    qDebug() << "Other mode";
 #endif
   }
   arg5 = &temp5;
@@ -2931,6 +2933,34 @@ SWIGEXPORT int SWIGSTDCALL CSharp_QtfNetCore_registerNetType___(void * jarg1, vo
   result = (int)registerNetType(*arg1,*arg2,arg3,arg4,*arg5);
   jresult = result; 
   return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_activateSignal___(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
+  NetGCHandle *arg1 = (NetGCHandle *) 0 ;
+  std::string arg2 ;
+  std::string arg3 ;
+  std::vector< NetVariant * > arg4 ;
+  std::vector< NetVariant * > *argp4 ;
+  
+  arg1 = jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  (&arg2)->assign(jarg2); 
+  if (!jarg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  (&arg3)->assign(jarg3); 
+  argp4 = (std::vector< NetVariant * > *)jarg4; 
+  if (!argp4) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null std::vector< NetVariant * >", 0);
+    return ;
+  }
+  arg4 = *argp4; 
+  activateSignal(arg1,arg2,arg3,arg4);
 }
 
 
@@ -2944,13 +2974,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTestHelper_RunQml___(void * jar
   if(jarg2) {
 #if defined(_WCHAR_MODE)
     temp2 = QString::fromWCharArray((TCHAR*)jarg2);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp2 = QString::fromUtf16((TCHAR*)jarg2);
-    qDebug() << "Linux mode";
 #else
     temp2 = QString::fromUtf8((TCHAR*)jarg2);
-    qDebug() << "Other mode";
 #endif
   }
   arg2 = &temp2;
@@ -2973,13 +3000,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTestHelper_RunQmlMethod___(void
   if(jarg2) {
 #if defined(_WCHAR_MODE)
     temp2 = QString::fromWCharArray((TCHAR*)jarg2);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp2 = QString::fromUtf16((TCHAR*)jarg2);
-    qDebug() << "Linux mode";
 #else
     temp2 = QString::fromUtf8((TCHAR*)jarg2);
-    qDebug() << "Other mode";
 #endif
   }
   arg2 = &temp2;
@@ -2988,13 +3012,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTestHelper_RunQmlMethod___(void
   if(jarg3) {
 #if defined(_WCHAR_MODE)
     temp3 = QString::fromWCharArray((TCHAR*)jarg3);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp3 = QString::fromUtf16((TCHAR*)jarg3);
-    qDebug() << "Linux mode";
 #else
     temp3 = QString::fromUtf8((TCHAR*)jarg3);
-    qDebug() << "Other mode";
 #endif
   }
   arg3 = &temp3;
@@ -3088,13 +3109,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_NetTestStringInterop_SetStringRefe
   if(jarg2) {
 #if defined(_WCHAR_MODE)
     temp2 = QString::fromWCharArray((TCHAR*)jarg2);
-    qDebug() << "Windows mode";
 #elif defined(_UTF16_MODE)
     temp2 = QString::fromUtf16((TCHAR*)jarg2);
-    qDebug() << "Linux mode";
 #else
     temp2 = QString::fromUtf8((TCHAR*)jarg2);
-    qDebug() << "Other mode";
 #endif
   }
   arg2 = &temp2;

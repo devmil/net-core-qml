@@ -61,13 +61,10 @@ SWIGEXPORT void SWIGSTDCALL SWIGRegisterQStringCallback_$module(SWIG_CSharpQStri
     if($input) {
         #if defined(_WCHAR_MODE)
         temp = QString::fromWCharArray((TCHAR*)$input);
-        qDebug() << "Windows mode";
         #elif defined(_UTF16_MODE)
         temp = QString::fromUtf16((TCHAR*)$input);
-        qDebug() << "Linux mode";
         #else
         temp = QString::fromUtf8((TCHAR*)$input);
-        qDebug() << "Other mode";
         #endif
     }
     $1 = &temp;

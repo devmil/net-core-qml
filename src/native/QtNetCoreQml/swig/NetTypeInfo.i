@@ -18,5 +18,5 @@ public:
     void AddProperty(NetPropertyInfo* propertyInfo);
     int GetPropertyCount();
     NetPropertyInfo* GetProperty(int index);
-    void NotifyPropertyChanged(void* instance, std::string propertyName);
+    void ActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args);
 };

@@ -11,11 +11,11 @@ TEMPLATE = lib
 
 DEFINES += QTNETCOREQML_LIBRARY
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += Q_OS_LINUX
 
 SOURCES += qguiapplication_helpers.cpp \
     swig.cpp \
     net_qml_register_type.cpp \
+    net_qml_activate_signal.cpp \
     net_qml_meta.cpp \
     net_qml_value.cpp \
     net_qml_value_type.cpp \
@@ -44,7 +44,8 @@ HEADERS += qtnetcoreqml_global.h \
     qtestobject.h \
     net_variant.h \
     net_test_helper.h \
-    net_test_string_interop.h
+    net_test_string_interop.h \
+    net_qml_activate_signal.h
 
 DISTFILES += \
     swig/QtNetCoreQml.i \
@@ -56,8 +57,8 @@ DISTFILES += \
     swig/QQmlRegisterType.i
 
 DEBUG_VARIABLES_TXT = "bin-dir: $$[QT_INSTALL_LIBEXECS]"
-DEBUG_VARIABLES_TXT += "build-dir: $$OUT_PWD/debug"
+DEBUG_VARIABLES_TXT += "build-dir: $$[OUT_PWD]/$$[CONFIG]"
 
-!write_file("$$PWD/../../net/Qt.NetCore/debug-variables.txt", DEBUG_VARIABLES_TXT) {
-  error("Couldn't create debug-variables.txt")
-}
+#!write_file("$$[OUT_PWD]/$$[CONFIG]/debug-variables.txt", DEBUG_VARIABLES_TXT) {
+#  error("Couldn't create debug-variables.txt")
+#}

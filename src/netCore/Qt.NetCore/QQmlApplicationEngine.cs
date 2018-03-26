@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,24 @@ namespace Qt.NetCore
                 versionMajor,
                 versionMinor,
                 qmlName);
+        }
+
+        public static void ActivateSignal(GCHandle handle, string signalName, params object[] args)
+        {
+            var netTypeInfo = NetTypeInfoManager.GetTypeInfo(handle.Target.GetType());
+            QtNetCoreQml.activateSignal(GCHandle.ToIntPtr(handle), netTypeInfo.GetFullTypeName(), signalName, PackVariantArgs(args));
+        }
+
+        private static NetVariantVector PackVariantArgs(object[] args)
+        {
+            NetVariantVector result = new NetVariantVector();
+            foreach(var arg in args)
+            {
+                NetVariant netVariant = new NetVariant();
+                Utils.PackValue(arg, netVariant, true);
+                result.Add(netVariant);
+            }
+            return result;
         }
     }
 }

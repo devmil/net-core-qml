@@ -4,10 +4,13 @@
 #include "qtnetcoreqml_global.h"
 #include <QMetaObject>
 #include <QList>
+#include <QMap>
 
 class NetTypeInfo;
 class NetMethodInfo;
 class NetPropertyInfo;
+class NetVariant;
+class NetValue;
 
 class NetTypeInfo {
 public:
@@ -23,8 +26,10 @@ public:
     NetMethodInfo* GetMethod(int index);
     void AddProperty(NetPropertyInfo* propertyInfo);
     int GetPropertyCount();
+    void RegisterNetInstance(NetGCHandle* instance, NetValue* qmlObject);
+    void UnregisterNetInstance(NetValue* qmlObject);
     NetPropertyInfo* GetProperty(int index);
-    void NotifyPropertyChanged(void* instance, std::string propertyName);
+    void ActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args);
     QMetaObject* metaObject;
 private:
     NetVariantTypeEnum prefVariantType;
@@ -32,6 +37,8 @@ private:
     std::string className;
     QList<NetMethodInfo*> methods;
     QList<NetPropertyInfo*> properties;
+    QMap<NetGCHandle*, QList<NetValue*>> netHandleValuesMap;
+    QMap<NetValue*, NetGCHandle*> netValuesHandleMap;
 };
 
 

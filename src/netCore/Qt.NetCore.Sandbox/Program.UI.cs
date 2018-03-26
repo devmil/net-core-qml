@@ -9,7 +9,7 @@ namespace Qt.NetCore.Sandbox
 {
     class Program
     {
-        public class AnotherType
+        public class AnotherType : INotifyPropertyChanged
         {
             private static int _COUNTER = 0;
             public AnotherType()
@@ -22,6 +22,8 @@ namespace Qt.NetCore.Sandbox
             {
                 Console.WriteLine("AnotherType: ~Dtor() #" + _COUNTER.ToString());
             }
+
+            public event PropertyChangedEventHandler PropertyChanged;
 
             public void Test()
             {
@@ -69,7 +71,7 @@ namespace Qt.NetCore.Sandbox
                 MessageToSend = string.Format("Hey there! We already created {0} instances!", _ANOTHER_TYPE_COUNTER);
                 return new AnotherType();
             }
-            
+
             public void TestMethod(AnotherType anotherType)
             {
                 Console.WriteLine("AnotherType: TestMethod()");
@@ -100,16 +102,16 @@ namespace Qt.NetCore.Sandbox
             {
                 Helpers.LoadDebugVariables();
             }
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(10);
-                    GC.Collect(GC.MaxGeneration);
-                }
-            // ReSharper disable FunctionNeverReturns
-            });
-            // ReSharper restore FunctionNeverReturns
+            //Task.Factory.StartNew(() =>
+            //{
+            //    while (true)
+            //    {
+            //        Thread.Sleep(10);
+            //        GC.Collect(GC.MaxGeneration);
+            //    }
+            //// ReSharper disable FunctionNeverReturns
+            //});
+            //// ReSharper restore FunctionNeverReturns
 
             using (var r = new StringVector(0))
             {

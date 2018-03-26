@@ -20,7 +20,6 @@ namespace Qt.NetCore
                 var content = File.ReadAllText(filePath);
                 if(string.IsNullOrEmpty(content))
                     throw new Exception("No content exists in debug-variables.txt, did you run QtNetCoreQml.pro?");
-                string buildDir = null;
                 string binDir = null;
                 using (var reader = new StringReader(content))
                     while (reader.Peek() > 0)
@@ -29,16 +28,11 @@ namespace Qt.NetCore
                         if (string.IsNullOrEmpty(line)) continue;
                         if (line.StartsWith("bin-dir: "))
                             binDir = line.Substring(9);
-                        else if (line.StartsWith("build-dir: "))
-                            buildDir = line.Substring(11);
                     }
                 if(string.IsNullOrEmpty(binDir))
                     throw new Exception("No bin-dir specified in debug-variables.txt");
-                if(string.IsNullOrEmpty(buildDir))
-                    throw new Exception("No build-dir specified in debug-variables.txt");
                 binDir= binDir.Replace("/", Path.DirectorySeparatorChar.ToString()).Replace("\\", Path.DirectorySeparatorChar.ToString());
-                buildDir = buildDir.Replace("/", Path.DirectorySeparatorChar.ToString()).Replace("\\", Path.DirectorySeparatorChar.ToString());
-                Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + buildDir + ";" + binDir);
+                Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + binDir);
             }
         }
     }

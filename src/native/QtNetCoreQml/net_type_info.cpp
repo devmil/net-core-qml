@@ -1,12 +1,14 @@
 #include "net_type_info.h"
 #include <QDebug>
 
+#include "net_qml_value.h"
+#include "net_instance.h"
+
 NetTypeInfo::NetTypeInfo(std::string fullTypeName) :
     prefVariantType(NetVariantTypeEnum_Invalid),
     fullTypeName(fullTypeName),
     metaObject(NULL)
 {
-
 }
 
 NetTypeInfo::~NetTypeInfo()
@@ -67,6 +69,40 @@ int NetTypeInfo::GetPropertyCount()
     return properties.length();
 }
 
+void NetTypeInfo::RegisterNetInstance(NetGCHandle* instance, NetValue* qmlObject)
+{
+    if(!netHandleValuesMap.contains(instance))
+    {
+        netHandleValuesMap.insert(instance, QList<NetValue*>());
+    }
+    if(!netHandleValuesMap[instance].contains(qmlObject))
+    {
+        netHandleValuesMap[instance].append(qmlObject);
+    }
+
+    if(!netValuesHandleMap.contains(qmlObject))
+    {
+        netValuesHandleMap.insert(qmlObject, instance);
+    }
+}
+
+void NetTypeInfo::UnregisterNetInstance(NetValue* qmlObject)
+{
+    if(netValuesHandleMap.contains(qmlObject))
+    {
+        auto netInstance = netValuesHandleMap[qmlObject];
+        netValuesHandleMap.remove(qmlObject);
+        if(netHandleValuesMap.contains(netInstance))
+        {
+            netHandleValuesMap[netInstance].removeAll(qmlObject);
+            if(netHandleValuesMap[netInstance].empty())
+            {
+                netHandleValuesMap.remove(netInstance);
+            }
+        }
+    }
+}
+
 NetPropertyInfo* NetTypeInfo::GetProperty(int index)
 {
     if(index < 0) return NULL;
@@ -75,7 +111,18 @@ NetPropertyInfo* NetTypeInfo::GetProperty(int index)
     return properties.at(index);
 }
 
-void NetTypeInfo::NotifyPropertyChanged(void* instance, std::string propertyName)
+void NetTypeInfo::ActivateSignal(NetGCHandle* instance, std::string signalName, std::vector<NetVariant*> args)
 {
-    qDebug() << "Got a property changed notification for a " << fullTypeName.c_str() << ". Property = " << propertyName.c_str() << ". Instance = " << reinterpret_cast<uint64_t>(instance);
+    if(netHandleValuesMap.contains(instance))
+    {
+        for(const auto& obj : netHandleValuesMap[instance])
+        {
+            obj->ActivateSignal(signalName, args);
+        }
+    }
+    else
+    {
+        qDebug() << "No instance found! Instance: " << (uint64_t)instance;
+        throw std::invalid_argument("Given instance not registered! Unable to send signal '" + signalName + "'");
+    }
 }
