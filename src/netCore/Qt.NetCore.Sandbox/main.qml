@@ -38,4 +38,8 @@ ApplicationWindow {
 	TestQmlImport {
 		id: test
 	}
+
+	Component.onCompleted: {
+		test.AnotherPropertyChanged.connect(function() { console.log("Another property changed!"); });
+	}
 }

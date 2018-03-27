@@ -39,6 +39,23 @@ namespace Qt.NetCore.Sandbox
 
             public event PropertyChangedEventHandler PropertyChanged;
 
+            private bool _AnotherProperty = false;
+
+            public bool AnotherProperty {
+                get
+                {
+                    return _AnotherProperty;
+                }
+                set
+                {
+                    if(_AnotherProperty != value)
+                    {
+                        _AnotherProperty = value;
+                        RaiseNotifyPropertyChanged();
+                    }
+                }
+            }
+
             public String MessageToSend
             {
                 get
@@ -54,6 +71,7 @@ namespace Qt.NetCore.Sandbox
                     }
                 }
             }
+
             public TestQmlImport()
             {
                 Console.WriteLine("TestQmlImport: Ctor()");

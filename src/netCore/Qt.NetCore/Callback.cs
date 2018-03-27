@@ -73,7 +73,7 @@ namespace Qt.NetCore
                 //ignore system stuff like events
                 if (property.IsSpecialName) continue;
 
-                string notifySignalName = null;
+                string notifySignalName = "";
                 if (implementsINotifyPropertyChanged)
                 {
                     notifySignalName = Utils.CalculatePropertyChangedSignalName(property.Name);

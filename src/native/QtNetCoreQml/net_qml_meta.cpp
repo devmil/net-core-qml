@@ -195,6 +195,26 @@ QMetaObject *metaObjectFor(NetTypeInfo *typeInfo)
     mob.setClassName(typeInfo->GetClassName().c_str());
     mob.setFlags(QMetaObjectBuilder::DynamicMetaObject);
 
+    //Signals have to go first!
+    for(int index = 0; index <= typeInfo->GetPropertyCount() - 1; index++)
+    {
+        NetPropertyInfo* propertyInfo = typeInfo->GetProperty(index);
+        QMetaPropertyBuilder propb = mob.addProperty(propertyInfo->GetPropertyName().c_str(),
+                                                     "QVariant",
+                                                     index);
+        propb.setWritable(propertyInfo->CanWrite());
+        propb.setReadable(propertyInfo->CanRead());
+
+        auto notifySignalName = propertyInfo->GetNotifySignalName();
+
+        if(!notifySignalName.empty())
+        {
+            auto normalizedSignalName = QMetaObject::normalizedSignature(notifySignalName.c_str());
+            auto signal = mob.addSignal(normalizedSignalName);
+            propb.setNotifySignal(signal);
+        }
+    }
+
     for(int index = 0; index <= typeInfo->GetMethodCount() - 1; index++)
     {
         NetMethodInfo* methodInfo = typeInfo->GetMethod(index);
@@ -224,24 +244,6 @@ QMetaObject *metaObjectFor(NetTypeInfo *typeInfo)
         }
     }
 
-    for(int index = 0; index <= typeInfo->GetPropertyCount() - 1; index++)
-    {
-        NetPropertyInfo* propertyInfo = typeInfo->GetProperty(index);
-        QMetaPropertyBuilder propb = mob.addProperty(propertyInfo->GetPropertyName().c_str(),
-                                                     "QVariant",
-                                                     index);
-        propb.setWritable(propertyInfo->CanWrite());
-        propb.setReadable(propertyInfo->CanRead());
-
-        auto notifySignalName = propertyInfo->GetNotifySignalName();
-        if(!notifySignalName.empty())
-        {
-            auto normalizedSignalName = QMetaObject::normalizedSignature(notifySignalName.c_str());
-            auto signal = mob.addSignal(normalizedSignalName);
-            propb.setNotifySignal(signal);
-        }
-    }
-
     QMetaObject *mo = mob.toMetaObject();
 
     typeInfo->metaObject = mo;
@@ -249,12 +251,22 @@ QMetaObject *metaObjectFor(NetTypeInfo *typeInfo)
 }
 
 GoValueMetaObject::GoValueMetaObject(QObject *value, NetInstance *instance)
-    : value(value), instance(instance)
+    : value(value), instance(instance), signalCount(0)
 {
     *static_cast<QMetaObject *>(this) = *metaObjectFor(instance->GetTypeInfo());
 
     QObjectPrivate *objPriv = QObjectPrivate::get(value);
     objPriv->metaObject = this;
+
+    signalCount = 0;
+    auto typeInfo = instance->GetTypeInfo();
+    for(int i=0; i<typeInfo->GetPropertyCount(); i++)
+    {
+        if(!typeInfo->GetProperty(i)->GetNotifySignalName().empty())
+        {
+            signalCount++;
+        }
+    }
 }
 
 int GoValueMetaObject::metaCall(QMetaObject::Call c, int idx, void **a)
@@ -296,11 +308,18 @@ int GoValueMetaObject::metaCall(QMetaObject::Call c, int idx, void **a)
     case  InvokeMetaMethod:
     {
         int offset = methodOffset();
+
         if (idx < offset) {
             return value->qt_metacall(c, idx, a);
         }
 
-        NetMethodInfo* methodInfo = instance->GetTypeInfo()->GetMethod(idx - offset);
+        int relativeIndex = idx - offset;
+        if(relativeIndex < signalCount)
+        {
+            return -1;
+        }
+
+        NetMethodInfo* methodInfo = instance->GetTypeInfo()->GetMethod(idx - offset - signalCount);
 
         std::vector<NetVariant*> parameters;
 

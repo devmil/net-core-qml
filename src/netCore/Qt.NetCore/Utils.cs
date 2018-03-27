@@ -85,7 +85,7 @@ namespace Qt.NetCore
         {
             //onPropertyNameChanged
             //first letter is capital
-            StringBuilder result = new StringBuilder(propertyName.Length + /* Changed */ + 7);
+            StringBuilder result = new StringBuilder(propertyName.Length + /* Changed() */ + 9);
             for(int i=0; i<propertyName.Length; i++)
             {
                 if(i == 0)
