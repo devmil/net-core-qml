@@ -9,7 +9,7 @@ namespace Qt.NetCore.Sandbox
 {
     class Program
     {
-        public class AnotherType : INotifyPropertyChanged
+        public class AnotherType
         {
             private static int _COUNTER = 0;
             public AnotherType()

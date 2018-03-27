@@ -66,16 +66,24 @@ namespace Qt.NetCore
                 typeInfo.AddMethod(methodInfo);
             }
 
+            bool implementsINotifyPropertyChanged = typeof(INotifyPropertyChanged).IsAssignableFrom(type);
+
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 //ignore system stuff like events
                 if (property.IsSpecialName) continue;
 
+                string notifySignalName = null;
+                if (implementsINotifyPropertyChanged)
+                {
+                    notifySignalName = Utils.CalculatePropertyChangedSignalName(property.Name);
+                }
                 typeInfo.AddProperty(NetTypeInfoManager.NewPropertyInfo(
                     typeInfo, property.Name,
                     NetTypeInfoManager.GetTypeInfo(property.PropertyType),
                     property.CanRead,
-                    property.CanWrite));
+                    property.CanWrite,
+                    notifySignalName));
             }
         }
 

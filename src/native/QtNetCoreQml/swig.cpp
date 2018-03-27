@@ -1925,13 +1925,14 @@ SWIGEXPORT void SWIGSTDCALL CSharp_QtfNetCore_delete_NetMethodInfo___(void * jar
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_new_NetPropertyInfo___(void * jarg1, char * jarg2, void * jarg3, unsigned int jarg4, unsigned int jarg5) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_new_NetPropertyInfo___(void * jarg1, char * jarg2, void * jarg3, unsigned int jarg4, unsigned int jarg5, char * jarg6) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
   std::string arg2 ;
   NetTypeInfo *arg3 = (NetTypeInfo *) 0 ;
   bool arg4 ;
   bool arg5 ;
+  std::string arg6 ;
   NetPropertyInfo *result = 0 ;
   
   arg1 = (NetTypeInfo *)jarg1; 
@@ -1943,7 +1944,12 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_new_NetPropertyInfo___(void * ja
   arg3 = (NetTypeInfo *)jarg3; 
   arg4 = jarg4 ? true : false; 
   arg5 = jarg5 ? true : false; 
-  result = (NetPropertyInfo *)new NetPropertyInfo(arg1,arg2,arg3,arg4,arg5);
+  if (!jarg6) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg6)->assign(jarg6); 
+  result = (NetPropertyInfo *)new NetPropertyInfo(arg1,arg2,arg3,arg4,arg5,arg6);
   jresult = (void *)result; 
   return jresult;
 }
@@ -2005,6 +2011,18 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_QtfNetCore_NetPropertyInfo_CanWrite__
   arg1 = (NetPropertyInfo *)jarg1; 
   result = (bool)(arg1)->CanWrite();
   jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT char * SWIGSTDCALL CSharp_QtfNetCore_NetPropertyInfo_GetNotifySignalName___(void * jarg1) {
+  char * jresult ;
+  NetPropertyInfo *arg1 = (NetPropertyInfo *) 0 ;
+  std::string result;
+  
+  arg1 = (NetPropertyInfo *)jarg1; 
+  result = (arg1)->GetNotifySignalName();
+  jresult = SWIG_csharp_string_callback((&result)->c_str()); 
   return jresult;
 }
 
@@ -2758,13 +2776,14 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfoManager_NewMethodInfo
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfoManager_NewPropertyInfo___(void * jarg1, char * jarg2, void * jarg3, unsigned int jarg4, unsigned int jarg5) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfoManager_NewPropertyInfo___(void * jarg1, char * jarg2, void * jarg3, unsigned int jarg4, unsigned int jarg5, char * jarg6) {
   void * jresult ;
   NetTypeInfo *arg1 = (NetTypeInfo *) 0 ;
   std::string arg2 ;
   NetTypeInfo *arg3 = (NetTypeInfo *) 0 ;
   bool arg4 ;
   bool arg5 ;
+  std::string arg6 ;
   NetPropertyInfo *result = 0 ;
   
   arg1 = (NetTypeInfo *)jarg1; 
@@ -2776,7 +2795,12 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_QtfNetCore_NetTypeInfoManager_NewPropertyIn
   arg3 = (NetTypeInfo *)jarg3; 
   arg4 = jarg4 ? true : false; 
   arg5 = jarg5 ? true : false; 
-  result = (NetPropertyInfo *)NetTypeInfoManager::NewPropertyInfo(arg1,arg2,arg3,arg4,arg5);
+  if (!jarg6) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return 0;
+  }
+  (&arg6)->assign(jarg6); 
+  result = (NetPropertyInfo *)NetTypeInfoManager::NewPropertyInfo(arg1,arg2,arg3,arg4,arg5,arg6);
   jresult = (void *)result; 
   return jresult;
 }

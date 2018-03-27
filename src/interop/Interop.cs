@@ -727,7 +727,7 @@ public class NetPropertyInfo : global::System.IDisposable {
     }
   }
 
-  public NetPropertyInfo(NetTypeInfo parentTypeInfo, string propertyName, NetTypeInfo returnType, bool canRead, bool canWrite) : this(QtNetCoreQmlPINVOKE.new_NetPropertyInfo(NetTypeInfo.getCPtr(parentTypeInfo), propertyName, NetTypeInfo.getCPtr(returnType), canRead, canWrite), true) {
+  public NetPropertyInfo(NetTypeInfo parentTypeInfo, string propertyName, NetTypeInfo returnType, bool canRead, bool canWrite, string notifySignalName) : this(QtNetCoreQmlPINVOKE.new_NetPropertyInfo(NetTypeInfo.getCPtr(parentTypeInfo), propertyName, NetTypeInfo.getCPtr(returnType), canRead, canWrite, notifySignalName), true) {
     if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -755,6 +755,11 @@ public class NetPropertyInfo : global::System.IDisposable {
 
   public bool CanWrite() {
     bool ret = QtNetCoreQmlPINVOKE.NetPropertyInfo_CanWrite(swigCPtr);
+    return ret;
+  }
+
+  public string GetNotifySignalName() {
+    string ret = QtNetCoreQmlPINVOKE.NetPropertyInfo_GetNotifySignalName(swigCPtr);
     return ret;
   }
 
@@ -1298,8 +1303,8 @@ public partial class NetTypeInfoManager : global::System.IDisposable {
     return ret;
   }
 
-  public static NetPropertyInfo NewPropertyInfo(NetTypeInfo parentTypeInfo, string propertyName, NetTypeInfo returnType, bool canRead, bool canWrite) {
-    global::System.IntPtr cPtr = QtNetCoreQmlPINVOKE.NetTypeInfoManager_NewPropertyInfo(NetTypeInfo.getCPtr(parentTypeInfo), propertyName, NetTypeInfo.getCPtr(returnType), canRead, canWrite);
+  public static NetPropertyInfo NewPropertyInfo(NetTypeInfo parentTypeInfo, string propertyName, NetTypeInfo returnType, bool canRead, bool canWrite, string notifySignalName) {
+    global::System.IntPtr cPtr = QtNetCoreQmlPINVOKE.NetTypeInfoManager_NewPropertyInfo(NetTypeInfo.getCPtr(parentTypeInfo), propertyName, NetTypeInfo.getCPtr(returnType), canRead, canWrite, notifySignalName);
     NetPropertyInfo ret = (cPtr == global::System.IntPtr.Zero) ? null : new NetPropertyInfo(cPtr, false);
     if (QtNetCoreQmlPINVOKE.SWIGPendingException.Pending) throw QtNetCoreQmlPINVOKE.SWIGPendingException.Retrieve();
     return ret;
@@ -2062,7 +2067,7 @@ class QtNetCoreQmlPINVOKE {
   public static extern void delete_NetMethodInfo(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_new_NetPropertyInfo___")]
-  public static extern global::System.IntPtr new_NetPropertyInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3, bool jarg4, bool jarg5);
+  public static extern global::System.IntPtr new_NetPropertyInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3, bool jarg4, bool jarg5, string jarg6);
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetPropertyInfo_GetParentType___")]
   public static extern global::System.IntPtr NetPropertyInfo_GetParentType(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -2078,6 +2083,9 @@ class QtNetCoreQmlPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetPropertyInfo_CanWrite___")]
   public static extern bool NetPropertyInfo_CanWrite(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetPropertyInfo_GetNotifySignalName___")]
+  public static extern string NetPropertyInfo_GetNotifySignalName(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_delete_NetPropertyInfo___")]
   public static extern void delete_NetPropertyInfo(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -2233,7 +2241,7 @@ class QtNetCoreQmlPINVOKE {
   public static extern global::System.IntPtr NetTypeInfoManager_NewMethodInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_NetTypeInfoManager_NewPropertyInfo___")]
-  public static extern global::System.IntPtr NetTypeInfoManager_NewPropertyInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3, bool jarg4, bool jarg5);
+  public static extern global::System.IntPtr NetTypeInfoManager_NewPropertyInfo(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2, global::System.Runtime.InteropServices.HandleRef jarg3, bool jarg4, bool jarg5, string jarg6);
 
   [global::System.Runtime.InteropServices.DllImport("QtNetCoreQml", EntryPoint="CSharp_QtfNetCore_new_NetTypeInfoManager___")]
   public static extern global::System.IntPtr new_NetTypeInfoManager();
