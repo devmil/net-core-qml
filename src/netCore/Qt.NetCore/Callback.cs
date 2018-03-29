@@ -148,14 +148,22 @@ namespace Qt.NetCore
                 }
             }
 
-            var r = o.GetType()
-                .GetMethod(methodInfo.GetMethodName(), BindingFlags.Instance | BindingFlags.Public)
-                .Invoke(o, methodParameters?.ToArray());
+            object r = null;
+
+            if (string.Equals("ToString", methodInfo.GetMethodName()))
+            {
+                r = o.ToString();
+            }
+            else
+            {
+                r = o.GetType()
+                    .GetMethod(methodInfo.GetMethodName(), BindingFlags.Instance | BindingFlags.Public)
+                    .Invoke(o, methodParameters?.ToArray());
+            }
 
             if (result == null)
             {
                 // this method doesn't have return type
-
             }
             else
             {
