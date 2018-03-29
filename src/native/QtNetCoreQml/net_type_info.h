@@ -5,6 +5,7 @@
 #include <QMetaObject>
 #include <QList>
 #include <QMap>
+#include <vector>
 
 class NetTypeInfo;
 class NetMethodInfo;
