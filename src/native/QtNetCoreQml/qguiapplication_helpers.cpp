@@ -12,15 +12,23 @@ QGuiApplication* new_QGuiApplication(std::vector<std::string> argv)
     if(*var == 0)
         return new QGuiApplication(*var, NULL);
 
-    std::vector<const char*> newArgs;
+    std::vector<const char*>* newArgs = new std::vector<const char*>();
     for(int x = 0; x < argv.size(); x++)
     {
-        newArgs.push_back(argv.at(x).c_str());
+        newArgs->push_back(argv.at(x).c_str());
     }
 
-    auto app = new QGuiApplication(*var, (char**)&newArgs[0]);
+    qDebug() << "args before:";
+    for(unsigned int i=0; i<newArgs->size(); i++) {
+        qDebug() << "[" << i << "]=" << newArgs->at(i);
+    }
 
-    app->exec();
+    auto app = new QGuiApplication(*var, (char**)&(newArgs->at(0)));
+
+    qDebug() << "args after:";
+    for(unsigned int i=0; i<newArgs->size(); i++) {
+        qDebug() << "[" << i << "]=" << newArgs->at(i);
+    }
 
     return app;
 }
