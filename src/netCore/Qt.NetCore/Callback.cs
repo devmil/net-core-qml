@@ -60,7 +60,10 @@ namespace Qt.NetCore
 
                 foreach (var parameter in method.GetParameters())
                 {
-                    methodInfo.AddParameter(parameter.Name, NetTypeInfoManager.GetTypeInfo(parameter.ParameterType));
+                    if (parameter.Name != null)
+                    {
+                        methodInfo.AddParameter(parameter.Name, NetTypeInfoManager.GetTypeInfo(parameter.ParameterType));
+                    }
                 }
 
                 typeInfo.AddMethod(methodInfo);
@@ -173,13 +176,13 @@ namespace Qt.NetCore
 
         public override void ReleaseGCHandle(IntPtr gcHandle)
         {
-            var handle = (GCHandle)gcHandle;
+            var handle = GCHandle.FromIntPtr(gcHandle);
             handle.Free();
         }
 
         public override void CopyGCHandle(IntPtr gcHandle, ref IntPtr gcHandleCopy)
         {
-            var handle = (GCHandle)gcHandle;
+            var handle = GCHandle.FromIntPtr(gcHandle);
             var duplicatedHandle = GCHandle.Alloc(handle.Target);
             gcHandleCopy = GCHandle.ToIntPtr(duplicatedHandle);
         }

@@ -32,7 +32,20 @@ namespace Qt.NetCore
 
         public static bool TryActivateSignal(GCHandle handle, string signalName, params object[] args)
         {
-            var netTypeInfo = NetTypeInfoManager.GetTypeInfo(handle.Target.GetType());
+            if(handle == null)
+            {
+                return false;
+            }
+            var handleTarget = handle.Target;
+            if(handleTarget == null)
+            {
+                return false;
+            }
+            var netTypeInfo = NetTypeInfoManager.GetTypeInfo(handleTarget.GetType());
+            if(netTypeInfo == null)
+            {
+                return false;
+            }
             return QtNetCoreQml.tryActivateSignal(GCHandle.ToIntPtr(handle), netTypeInfo.GetFullTypeName(), signalName, PackVariantArgs(args));
         }
 
