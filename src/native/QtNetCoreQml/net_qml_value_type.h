@@ -22,8 +22,14 @@ public:
         static_cast<QMetaObject &>(staticMetaObject) = *metaObjectFor(typeInfo);
     };
 
-    static NetTypeInfo *typeInfo;
+    static NetTypeInfo* typeInfo;
     static QMetaObject staticMetaObject;
 };
+
+template <int N>
+NetTypeInfo* NetValueType<N>::typeInfo = 0;
+template <int N>
+QMetaObject NetValueType<N>::staticMetaObject = QMetaObject();
+
 
 #endif // NET_QML_VALUE_TYPE_H
