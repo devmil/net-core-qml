@@ -37,3 +37,19 @@ void QQmlApplicationEngine_loadFile(QQmlApplicationEngine* instance, std::string
 {
     instance->load(QString::fromStdString(filePath));
 }
+
+GuiThreadContextTriggerCallback* s_guiThreadContextTriggerCallback = nullptr;
+
+void QGuiApplication_setGuiThreadContextTriggerCallback(QGuiApplication*, GuiThreadContextTriggerCallback* callback) {
+    s_guiThreadContextTriggerCallback = callback;
+}
+
+void QGuiApplication_requestGuiThreadContextTrigger(QGuiApplication* instance) {
+    QMetaObject::invokeMethod(instance, []()
+    {
+        auto localCallback = s_guiThreadContextTriggerCallback;
+        if(localCallback != nullptr) {
+            localCallback->onGuiThreadContextTrigger();
+        }
+    });
+}

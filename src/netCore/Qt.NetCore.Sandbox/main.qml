@@ -23,7 +23,10 @@ ApplicationWindow {
 	Page1 {
 		anchors.horizontalCenter: parent.horizontalCenter
 		button1.onClicked: {
-			test.OnPressed(textField1.text);
+			test.OnPressedAsync(textField1.text);
+		}
+		button2.onClicked: {
+			test.OnPressedAsyncWithResult(textField1.text);
 		}
 		textFieldMessage.text: test.MessageToSend
 		buttonSendMessage.onClicked: {

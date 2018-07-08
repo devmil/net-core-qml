@@ -4,11 +4,31 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Qt.NetCore
 {
     internal class Callback : NetTypeInfoCallbacks
     {
+        public static Callback Instance
+        {
+            get;
+            private set;
+        }
+
+        public Callback()
+        {
+            Instance = this;
+        }
+
+        private QGuiApplication _App = null;
+
+        public void SetApp(QGuiApplication app)
+        {
+            _App = app;
+        }
+
         public override bool isValidType(string typeName)
         {
             var type = Type.GetType(typeName);
@@ -51,7 +71,11 @@ namespace Qt.NetCore
 
                 NetTypeInfo returnType = null;
 
-                if (method.ReturnParameter.ParameterType != typeof(void))
+                if(typeof(Task).IsAssignableFrom(method.ReturnParameter.ParameterType))
+                {
+                    //.NET methods that return a Task don't reflect their return value into Qt
+                }
+                else if (method.ReturnParameter.ParameterType != typeof(void))
                 {
                     returnType = NetTypeInfoManager.GetTypeInfo(method.ReturnParameter.ParameterType);
                 }
@@ -131,46 +155,84 @@ namespace Qt.NetCore
             pInfo.SetValue(o, newValue);
         }
 
+        class QtSynchronizationContext : SynchronizationContext
+        {
+            private QGuiApplication _App;
+
+            public QtSynchronizationContext(QGuiApplication app)
+            {
+                _App = app;
+            }
+
+            public override void Post(SendOrPostCallback d, object state)
+            {
+                if (_App != null)
+                {
+                    _App.InvokeOnGuiThread(new Action(() => d.Invoke(state)));
+                }
+                else
+                {
+                    base.Post(d, state);
+                }
+            }
+        }
+
+        class QtSynchronizationContextHandler : IDisposable
+        {
+            private SynchronizationContext _OriginalSynchronizationContext;
+            public QtSynchronizationContextHandler(QGuiApplication app)
+            {
+                _OriginalSynchronizationContext = SynchronizationContext.Current;
+                SynchronizationContext.SetSynchronizationContext(new QtSynchronizationContext(app));
+            }
+
+            public void Dispose()
+            {
+                SynchronizationContext.SetSynchronizationContext(_OriginalSynchronizationContext);
+            }
+        }
 
         public override void InvokeMethod(NetMethodInfo methodInfo, NetInstance target, NetVariantVector parameters,
             NetVariant result)
         {
-            var handle = (GCHandle)target.GetGCHandle();
-            var o = handle.Target;
-
-            List<object> methodParameters = null;
-
-            if (parameters.Count > 0)
+            using (new QtSynchronizationContextHandler(_App))
             {
-                methodParameters = new List<object>();
-                foreach (var parameterInstance in parameters)
+                var handle = (GCHandle)target.GetGCHandle();
+                var o = handle.Target;
+
+                List<object> methodParameters = null;
+
+                if (parameters.Count > 0)
                 {
-                    object v = null;
-                    Utils.Unpackvalue(ref v, parameterInstance);
-                    methodParameters.Add(v);
+                    methodParameters = new List<object>();
+                    foreach (var parameterInstance in parameters)
+                    {
+                        object v = null;
+                        Utils.Unpackvalue(ref v, parameterInstance);
+                        methodParameters.Add(v);
+                    }
                 }
-            }
 
-            object r = null;
-
-            if (string.Equals("ToString", methodInfo.GetMethodName()))
-            {
-                r = o.ToString();
-            }
-            else
-            {
-                r = o.GetType()
-                    .GetMethod(methodInfo.GetMethodName(), BindingFlags.Instance | BindingFlags.Public)
-                    .Invoke(o, methodParameters?.ToArray());
-            }
-
-            if (result == null)
-            {
-                // this method doesn't have return type
-            }
-            else
-            {
-                Utils.PackValue(r, result, true);
+                if (string.Equals("ToString", methodInfo.GetMethodName()))
+                {
+                    var resultValue = o.ToString();
+                    Utils.PackValue(resultValue, result, true);
+                }
+                else
+                {
+                    var method = o.GetType()
+                        .GetMethod(methodInfo.GetMethodName(), BindingFlags.Instance | BindingFlags.Public);
+                    if (typeof(Task).IsAssignableFrom(method.ReturnType))
+                    {
+                        method.Invoke(o, methodParameters?.ToArray());
+                        //Task doesn't get returned
+                    }
+                    else
+                    {
+                        var resultValue = method.Invoke(o, methodParameters?.ToArray());
+                        Utils.PackValue(resultValue, result, true);
+                    }
+                }
             }
         }
 

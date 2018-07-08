@@ -11,6 +11,10 @@ namespace Qt.NetCore
     {
         public static void PackValue(object source, NetVariant destination, bool registerForNotifyPropertyChangedSignalPassing)
         {
+            if(destination == null)
+            {
+                return;
+            }
             if (source == null)
             {
                 destination.Clear();

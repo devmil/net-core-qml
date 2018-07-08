@@ -95,9 +95,17 @@ namespace Qt.NetCore.Sandbox
                 Console.WriteLine("AnotherType: TestMethod()");
             }
 
-            public void OnPressed(string editContent)
+            public async Task<bool> OnPressedAsyncWithResult(string editContent)
             {
                 Console.Out.WriteLine("Message from QML: OnPressed, editContent = {0}", editContent);
+                await Task.Delay(1000);
+                Console.Out.WriteLine("Message from QML (after delay): OnPressed, editContent = {0}", editContent);
+                return true;
+            }
+
+            public async Task OnPressedAsync(string editContent)
+            {
+                await OnPressedAsyncWithResult(editContent);
             }
 
             public void SendMessage()
