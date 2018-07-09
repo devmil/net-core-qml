@@ -22,11 +22,11 @@ namespace Qt.NetCore
             Instance = this;
         }
 
-        private QGuiApplication _App = null;
+        private IUiContext _UiContext = null;
 
-        public void SetApp(QGuiApplication app)
+        public void SetUiContext(IUiContext uiContext)
         {
-            _App = app;
+            _UiContext = uiContext;
         }
 
         public override bool isValidType(string typeName)
@@ -157,18 +157,18 @@ namespace Qt.NetCore
 
         class QtSynchronizationContext : SynchronizationContext
         {
-            private QGuiApplication _App;
+            private IUiContext _UiContext;
 
-            public QtSynchronizationContext(QGuiApplication app)
+            public QtSynchronizationContext(IUiContext uiContext)
             {
-                _App = app;
+                _UiContext = uiContext;
             }
 
             public override void Post(SendOrPostCallback d, object state)
             {
-                if (_App != null)
+                if (_UiContext != null)
                 {
-                    _App.InvokeOnGuiThread(new Action(() => d.Invoke(state)));
+                    _UiContext.InvokeOnGuiThread(() => d.Invoke(state));
                 }
                 else
                 {
@@ -180,10 +180,10 @@ namespace Qt.NetCore
         class QtSynchronizationContextHandler : IDisposable
         {
             private SynchronizationContext _OriginalSynchronizationContext;
-            public QtSynchronizationContextHandler(QGuiApplication app)
+            public QtSynchronizationContextHandler(IUiContext uiContext)
             {
                 _OriginalSynchronizationContext = SynchronizationContext.Current;
-                SynchronizationContext.SetSynchronizationContext(new QtSynchronizationContext(app));
+                SynchronizationContext.SetSynchronizationContext(new QtSynchronizationContext(uiContext));
             }
 
             public void Dispose()
@@ -195,7 +195,7 @@ namespace Qt.NetCore
         public override void InvokeMethod(NetMethodInfo methodInfo, NetInstance target, NetVariantVector parameters,
             NetVariant result)
         {
-            using (new QtSynchronizationContextHandler(_App))
+            using (new QtSynchronizationContextHandler(_UiContext))
             {
                 var handle = (GCHandle)target.GetGCHandle();
                 var o = handle.Target;

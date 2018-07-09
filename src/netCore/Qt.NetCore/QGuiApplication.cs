@@ -4,24 +4,36 @@ using System.Text;
 
 namespace Qt.NetCore
 {
+    interface IRequestGuiThreadContextHandler
+    {
+        void RequestGuiThreadContextTrigger();
+    }
+
     class QtGuiThreadDispatcher : GuiThreadContextTriggerCallback
     {
-        private Queue<Action> m_actionQueue = new Queue<Action>();
+        private Queue<Action> _ActionQueue = new Queue<Action>();
+        private IRequestGuiThreadContextHandler _RequestGuiThreadContextHandler;
+
+        public QtGuiThreadDispatcher(IRequestGuiThreadContextHandler requestGuiThreadContextHandler)
+        {
+            _RequestGuiThreadContextHandler = requestGuiThreadContextHandler;
+        }
 
         public void Dispatch(Action action)
         {
-            lock (m_actionQueue)
+            lock (_ActionQueue)
             {
-                m_actionQueue.Enqueue(action);
+                _ActionQueue.Enqueue(action);
             }
+            _RequestGuiThreadContextHandler.RequestGuiThreadContextTrigger();
         }
 
         public override void onGuiThreadContextTrigger()
         {
             Action action = null;
-            lock (m_actionQueue)
+            lock (_ActionQueue)
             {
-                action = m_actionQueue.Dequeue();
+                action = _ActionQueue.Dequeue();
             }
             if (action != null)
             {
@@ -30,32 +42,25 @@ namespace Qt.NetCore
         }
     }
 
-    public partial class QGuiApplication
+    public partial class QGuiApplication : IUiContext, IRequestGuiThreadContextHandler
     {
-        private QtGuiThreadDispatcher m_dispatcher = new QtGuiThreadDispatcher();
+        private QtGuiThreadDispatcher _Dispatcher;
 
         partial void OnCreate()
         {
-            Callback.Instance.SetApp(this);
-            EnsureDispatcherRegistration();
+            _Dispatcher = new QtGuiThreadDispatcher(this);
+            setGuiThreadContextTriggerCallback(_Dispatcher);
+            Callback.Instance.SetUiContext(this);
         }
 
         public void InvokeOnGuiThread(Action action)
         {
-            EnsureDispatcherRegistration();
-            m_dispatcher.Dispatch(action);
-            requestGuiThreadContextTrigger();
+            _Dispatcher.Dispatch(action);
         }
 
-        private bool _IsRegistered = false;
-        private void EnsureDispatcherRegistration()
+        public void RequestGuiThreadContextTrigger()
         {
-            if (_IsRegistered)
-            {
-                return;
-            }
-            _IsRegistered = true;
-            setGuiThreadContextTriggerCallback(m_dispatcher);
+            requestGuiThreadContextTrigger();
         }
     }
 }
