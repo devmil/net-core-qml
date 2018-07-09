@@ -7,6 +7,7 @@ namespace Qt.NetCore
     interface IRequestGuiThreadContextHandler
     {
         void RequestGuiThreadContextTrigger();
+        void SetGuiThreadContextTriggerCallback(GuiThreadContextTriggerCallback guiThreadContextTriggerCallback);
     }
 
     class QtGuiThreadDispatcher : GuiThreadContextTriggerCallback
@@ -17,6 +18,7 @@ namespace Qt.NetCore
         public QtGuiThreadDispatcher(IRequestGuiThreadContextHandler requestGuiThreadContextHandler)
         {
             _RequestGuiThreadContextHandler = requestGuiThreadContextHandler;
+            _RequestGuiThreadContextHandler.SetGuiThreadContextTriggerCallback(this);
         }
 
         public void Dispatch(Action action)
@@ -49,7 +51,6 @@ namespace Qt.NetCore
         partial void OnCreate()
         {
             _Dispatcher = new QtGuiThreadDispatcher(this);
-            setGuiThreadContextTriggerCallback(_Dispatcher);
             Callback.Instance.SetUiContext(this);
         }
 
@@ -61,6 +62,11 @@ namespace Qt.NetCore
         public void RequestGuiThreadContextTrigger()
         {
             requestGuiThreadContextTrigger();
+        }
+
+        public void SetGuiThreadContextTriggerCallback(GuiThreadContextTriggerCallback guiThreadContextTriggerCallback)
+        {
+            setGuiThreadContextTriggerCallback(guiThreadContextTriggerCallback);
         }
     }
 }
