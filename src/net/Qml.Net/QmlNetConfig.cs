@@ -23,6 +23,7 @@ namespace Qml.Net
             if (!QCoreApplication.IsMainThread)
             {
                 Console.WriteLine(@"You are using QML functionality outside the UI Thread!
+You probably want to dispatch UI related stuff to the UI thread by using the Dispatch method of the QCoreApplication
 Refer to https://github.com/qmlnet/qmlnet/issues/112 to get more information.
 Stack Trace:
 " + System.Environment.StackTrace);
